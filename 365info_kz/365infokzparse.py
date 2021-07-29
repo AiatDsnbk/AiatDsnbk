@@ -7,7 +7,7 @@ date_while = date.today()
 xx = date_while.strftime('%d.%m.%Y')
 
 page = urllib.request.urlopen("https://365info.kz/category/poslednie-novosti")
-soup = BeautifulSoup(page)
+soup = BeautifulSoup(page, "html.parser")
 
 h = soup.find_all('a', {'class': 'archive__item-link'})
 for h1 in h:
@@ -44,4 +44,4 @@ for h1 in h:
     except:
         img = None
     
-    print(href)
+    print(img)

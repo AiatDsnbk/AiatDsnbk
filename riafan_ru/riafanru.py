@@ -3,6 +3,7 @@ import ibm_db_dbi as db
 import requests
 import re
 from bs4 import BeautifulSoup
+import datetime
 
 def telegram_bot_sendtext(bot_message):
     bot_token = '1700296384:AAGoaq3o2WD7BbUthmU9dEYQD5IMEKBIgxU'
@@ -33,10 +34,10 @@ try:
     for i in range(len(url_statyi)):
         url2 = soup.find_all(class_ = 'cat-news-item')[i]
         url1 = url2.findAll('a')[0]["href"]
-        
-        v = url2.find(class_ = 'cat-item__views tile-list-news__views')
-        view = v.get_text()
-        vi.append(view)
+        #views Убрали 20-25.07.21 сегодня 31
+        # v = url2.find(class_ = 'cat-item__views tile-list-news__views')
+        # view = v.get_text()
+        # vi.append(view)
         
         urls.append(url1)
         q = 0
@@ -46,28 +47,28 @@ try:
         url = urls[i][0:]
         object_id = converter(url)
         
-        views = vi[i]
+        # views = vi[i]
         
         page = requests.get(URL)
         page.status_code
         soup =  BeautifulSoup(page.text, 'html.parser')
         
-#         text1 = soup.find(class_ = 'content-wrap')
-#         text = text1.get_text()
+        text1 = soup.find(class_ = 'content-wrap')
+        text = text1.get_text()
         
-#         date = soup.find(class_ = 'post-published').get('datetime')
-#         d = re.findall('\d+', date)
-#         date_time = d[0] + '-' + d[1] + '-' + d[2] + ' ' + d[3] + ':' + d[4] + ':' + '00.0'
+        date = soup.find(class_ = 'post-published').get('datetime')
+        d = re.findall('\d+', date)
+        date_time = d[0] + '-' + d[1] + '-' + d[2] + ' ' + d[3] + ':' + d[4] + ':' + '00.0'
         
-#         time1 = d[3] + ':' + d[4] + ':' + '00'
-#         tlist = [time1, '3:00:00']
-#         mysum = datetime.timedelta()
+        time1 = d[3] + ':' + d[4] + ':' + '00'
+        tlist = [time1, '3:00:00']
+        mysum = datetime.timedelta()
 
-#         for i in tlist:
-#             (h, m, s) = i.split(':')
-#             dt = datetime.timedelta(hours = int(h), minutes = int(m), seconds = int(s))
-#             mysum += dt
-#             date = d[0] + '-' + d[1] + '-' + d[2] + ' ' + str(mysum) + '.0'
+        for i in tlist:
+            (h, m, s) = i.split(':')
+            dt = datetime.timedelta(hours = int(h), minutes = int(m), seconds = int(s))
+            mysum += dt
+            date = d[0] + '-' + d[1] + '-' + d[2] + ' ' + str(mysum) + '.0'
             
         try:
             img = soup.find('div', {'class': 'main-image-container'})
@@ -75,37 +76,37 @@ try:
         except:
             url_attachment = None
         
-#         connection_text = """DATABASE=PRODDB;HOSTNAME=192.168.252.11;PORT=50000;
-#         PROTOCOL=TCPIP;UID=db2inst1;PWD=Qjuehnghj1;"""
-#         sql_1_test = """SELECT url_channel FROM TL_MEDIA_DATA_NEWS_TEST WHERE source_id = '700'"""
-#         con = db.connect(connection_text, "", "")
-#         cursor = con.cursor()
-#         cursor.execute(sql_1_test)
-#         t = cursor.fetchall()
-#         con.commit()
-#         cursor.close()
-#         con.close()
+        # connection_text = """DATABASE=PRODDB;HOSTNAME=192.168.252.11;PORT=50000;
+        # PROTOCOL=TCPIP;UID=db2inst1;PWD=Qjuehnghj1;"""
+        # sql_1_test = """SELECT url_channel FROM TL_MEDIA_DATA_NEWS_TEST WHERE source_id = '700'"""
+        # con = db.connect(connection_text, "", "")
+        # cursor = con.cursor()
+        # cursor.execute(sql_1_test)
+        # t = cursor.fetchall()
+        # con.commit()
+        # cursor.close()
+        # con.close()
         
-#         t0 = []
-#         for y in range(len(t)):
-#             t0.append(t[y][0])
+        # t0 = []
+        # for y in range(len(t)):
+        #     t0.append(t[y][0])
             
-#         if not URL in t0:
-#             connection_text = """DATABASE=PRODDB;HOSTNAME=192.168.252.11;
-#             PORT=50000;PROTOCOL=TCPIP;UID=db2inst1;PWD=Qjuehnghj1;"""
-#             con = db.connect(connection_text, "", "")
-#             cursor = con.cursor()
-#             insert_query = """insert into TL_MEDIA_DATA_NEWS_TEST (object_id, published_date, channel_id, 
-#             likes, comments, views, reposts, caption, text, url_attachment, url_channel, source_id) 
-#             values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
-#             cursor.execute(insert_query, (object_id, date, None, None, None, views, None, None, text, url_attachment, URL, 700))
-#             con.commit()
-#             cursor.close()
-#             con.close()
+        # if not URL in t0:
+        #     connection_text = """DATABASE=PRODDB;HOSTNAME=192.168.252.11;
+        #     PORT=50000;PROTOCOL=TCPIP;UID=db2inst1;PWD=Qjuehnghj1;"""
+        #     con = db.connect(connection_text, "", "")
+        #     cursor = con.cursor()
+        #     insert_query = """insert into TL_MEDIA_DATA_NEWS_TEST (object_id, published_date, channel_id, 
+        #     likes, comments, views, reposts, caption, text, url_attachment, url_channel, source_id) 
+        #     values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+        #     cursor.execute(insert_query, (object_id, date, None, None, None, None, None, None, text, url_attachment, URL, 700))
+        #     con.commit()
+        #     cursor.close()
+        #     con.close()
             q = q + 1
     send_text = "Парсинг сайта riafan.ru успешно прошло, добавлено " + str(q) + " публикации. Благодарю."
     telegram_bot_sendtext(send_text)   #Сообщение отправлено в телеграмм бот
-    print(url_attachment)
+    print(send_text)
 except (Exception, db.Error) as error:
     send_text = "Ошибка при парсинге сайта riafan.ru " + "\n" + str(error)
     telegram_bot_sendtext(send_text)   #Сообщение отправлено в телеграмм бот

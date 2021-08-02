@@ -1,11 +1,17 @@
+#https://ehonews.kzMozilla/5.0
 import urllib.request
+import urllib2
 from bs4 import BeautifulSoup
 from datetime import date
 
 date_while = date.today()
 xx = date_while.strftime('%Y.%m.%d')
 
-page = urllib.request.urlopen("https://ehonews.kz")
+opener = urllib2.build_opener()
+opener.addheaders = [('User-agent', 'Google Chrome')]
+page = opener.open('https://ehonews.kz')
+
+# page = urllib.request.urlopen("https://ehonews.kz")
 soup = BeautifulSoup(page)
 
 h = soup.find_all('h3', {'class': 'jeg_post_title'})

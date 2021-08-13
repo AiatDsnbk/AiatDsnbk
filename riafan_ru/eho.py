@@ -1,40 +1,47 @@
-#https://ehonews.kzMozilla/5.0
 import urllib.request
-import urllib2
 from bs4 import BeautifulSoup
 from datetime import date
+import re
+import requests
+from datetime import date, timedelta
+import urllib3
 
 date_while = date.today()
 xx = date_while.strftime('%Y.%m.%d')
 
-opener = urllib2.build_opener()
-opener.addheaders = [('User-agent', 'Google Chrome')]
-page = opener.open('https://ehonews.kz')
+# page = urllib3.build_opener()
+# page.addheaders = [('User', 'Mozilla/89.0')]
+# page1 = page.open("https://ehonews.kz")
+# soup = BeautifulSoup(page1)
+
+url = "https://ehonews.kz/"
+response = requests.get(url)
+soup = BeautifulSoup(response.content, "html.parser")
 
 # page = urllib.request.urlopen("https://ehonews.kz")
-soup = BeautifulSoup(page)
+# soup = BeautifulSoup(page)
 
 h = soup.find_all('h3', {'class': 'jeg_post_title'})
 for h1 in h:
-    href = h1.get('href')
+    href = h1.find('a').get('href')
 #     if re.split('/',h1.get('href'))[1] == xx:
-#     post = "https://kapital.kz" + href
-#     page = urllib.request.urlopen(post)
-#     soup = BeautifulSoup(page)
+    url = href
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, "html.parser")
 #     try:
-#         t = soup.find('div', {'class': 'article__body'})
-#         text = soup.find('h1', {'class': 'article__title'}).text + "\n"
-#         t1 = t.find_all('p', {'class': ''})
-#     for t2 in t1:
-#         text = text + t2.text
+    t = soup.find('div', {'class': 'content-inner '})
+    text = soup.find('h1', {'class': 'jeg_post_title'}).text + "\n"
+    t1 = t.find_all('p', {'class': ''})
+    for t2 in t1:
+        text = text + t2.text
         
-#     try:
-#         img = soup.find('img', {'class': ''})
-#     except:
-#         img = None
+    try:
+        img = soup.find('div', {'class': 'thumbnail-container animate-lazy'}).find('img').get('src')
+    except:
+        img = None
         
 #     date = soup.find('time').text
 #     d = re.findall('\d+', date)
-#     date_time = d[0]+'.'+d[1]+'.'+d[2]+' '+d[3]+':'+d[4]
+#     datetime = d[0]+'.'+d[1]+'.'+d[2]+' '+d[3]+':'+d[4]
     
-    print(href)
+    print(text)
